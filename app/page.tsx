@@ -15,7 +15,7 @@ import {
 
 // Componentes simples
 import { ProductCard } from '@/components/ui/product-card';
-import CategorySectionMinimal from '@/components/custom/CategorySectionMinimal';
+import CategorySectionDynamic from '@/components/custom/CategorySectionDynamic';
 import { WooNavbar } from '@/components/layout/navbar/woo-navbar';
 import FooterCustom from '@/components/custom/FooterCustom';
 import { BannerCarousel } from '@/components/custom/BannerCarousel';
@@ -130,19 +130,8 @@ export default async function HomePage() {
         </section>
 
         {categories.length > 0 && (
-          <section className="py-16 bg-white">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="mb-10 max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#7A6A5D]">Colecciones destacadas</p>
-                <h2 className="mt-4 text-3xl font-bold text-[#322018] sm:text-4xl">
-                  Categorías que inspiran confianza
-                </h2>
-                <p className="mt-4 text-base leading-7 text-[#5B3A29]/85">
-                  Explora nuestra selección de ropa femenina mayorista, pensada para ofrecer variedad sin perder la elegancia que tu negocio merece.
-                </p>
-              </div>
-            </div>
-            <CategorySectionMinimal collections={categories} />
+          <section>
+            <CategorySectionDynamic collections={categories} />
           </section>
         )}
 

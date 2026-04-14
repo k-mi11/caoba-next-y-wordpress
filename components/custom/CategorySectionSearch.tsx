@@ -17,11 +17,11 @@ interface Collection {
   };
 }
 
-interface CategorySectionDynamicProps {
+interface CategorySectionSearchProps {
   collections: Collection[];
 }
 
-export default function CategorySectionDynamic({ collections }: CategorySectionDynamicProps) {
+export default function CategorySectionSearch({ collections }: CategorySectionSearchProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -211,7 +211,7 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
                       <div className="relative aspect-[4/6] w-full overflow-hidden bg-gray-200 rounded-sm">
                           <Image
                             src={category.imageSrc}
-                            alt={`Categoría ${category.title} - Explora productos de ${category.title} en servigreen`}
+                            alt={`Categoría ${category.title} - Explora productos de ${category.title} en Tienda Caoba`}
                             fill
                             className="object-cover object-center group-hover:scale-110 transition-transform duration-700"
                             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -226,7 +226,7 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
                               {category.title}
                             </h3>
                             <p className="text-white text-sm sm:text-base mt-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
-                              Explorar →
+                              Explorar productos
                             </p>
                           </div>
                         </div>
@@ -284,11 +284,9 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
   })}
 </div>
 
-
-
               {/* Indicador de swipe solo en mobile */}
               <div className="block sm:hidden text-center mt-4 text-white/60 text-xs animate-pulse">
-                ← Desliza para ver más →
+                Desliza para ver más categorías
               </div>
             </div>
           </div>
