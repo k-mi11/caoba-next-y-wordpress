@@ -46,10 +46,21 @@ export default function CategorySectionMinimal({ collections }: CategorySectionM
     { title: 'Lencería', handle: 'lenceria', path: '/search/lenceria' }
   ];
 
-  const validCollections = fixedCategories.map(category => ({
-    ...category,
-    imageSrc: getCategoryImage(category.handle)
-  }));
+  // Buscar las imágenes reales de WooCommerce para nuestras categorías fijas
+  const validCollections = fixedCategories.map(category => {
+    // Buscar si existe una colección de WooCommerce que coincida con nuestra categoría fija
+    const wooCategory = collections.find(c => 
+      c.handle.toLowerCase() === category.handle.toLowerCase()
+    );
+    
+    // Usar la imagen de WooCommerce si existe, sino usar la imagen local por defecto
+    const imageSrc = wooCategory?.image?.url || getCategoryImage(category.handle);
+    
+    return {
+      ...category,
+      imageSrc: imageSrc
+    };
+  });
 
   // Duplicar colecciones para scroll infinito (solo 2 veces para mejor rendimiento)
   const infiniteCollections = [...validCollections, ...validCollections];
