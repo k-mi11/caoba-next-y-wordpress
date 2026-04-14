@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm i:*)",
+      "Bash(npm run build)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(del:*)",
+      "Bash(ls:*)",
+      "Bash(dir:*)",
+      "Bash(pnpm build)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(curl:*)",
+      "Bash(git checkout:*)",
+      "Bash(python -m json.tool)",
+      "Bash(if exist \".next\" rmdir /s /q .next)",
+      "Bash(test -f c:UsersUsuariopinneacle.env.example)",
+      "Bash(powershell -Command \"Measure-Command { Read-Host ''Presiona Enter para simular revisión...'' }\")",
+      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''package.json'', ''utf8''\\)\\); console.log\\(''✅ JSON válido''\\)\")",
+      "Bash(git mv lib/structured-data.ts lib/structured-data.tsx)"
+    ]
+  }
+}
