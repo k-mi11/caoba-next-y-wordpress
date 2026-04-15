@@ -24,6 +24,7 @@ interface CategorySectionSearchProps {
 export default function CategorySectionSearch({ collections }: CategorySectionSearchProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Mapeo de imágenes estáticas por categoría (búsqueda flexible)
   const getCategoryImage = (handle: string): string => {
@@ -56,11 +57,11 @@ export default function CategorySectionSearch({ collections }: CategorySectionSe
 
   // Calcular cuántas cards se ven a la vez según el viewport
   const getVisibleCards = () => {
-    if (typeof window === 'undefined') return 3;
+    if (typeof window === 'undefined') return 7;
     const width = window.innerWidth;
-    if (width < 640) return 1; // mobile: 1 card
-    if (width < 1024) return 2; // tablet: 2 cards
-    return 3; // desktop: 3 cards
+    if (width < 640) return 2; // mobile: 2 cards
+    if (width < 1024) return 5; // tablet: 5 cards
+    return 7; // desktop: 7 cards
   };
 
   const [visibleCards, setVisibleCards] = useState(getVisibleCards());
@@ -73,6 +74,42 @@ export default function CategorySectionSearch({ collections }: CategorySectionSe
     updateVisibleCards();
     window.addEventListener('resize', updateVisibleCards);
     return () => window.removeEventListener('resize', updateVisibleCards);
+  }, []);
+
+  // Infinite scroll with automatic restart
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const checkAndRestart = () => {
+      const scrollLeft = container.scrollLeft;
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+      
+      // When we reach the end, restart to beginning
+      if (scrollLeft + clientWidth >= scrollWidth - 1) {
+        container.scrollLeft = 0;
+      }
+    };
+
+    // Check scroll position
+    const interval = setInterval(checkAndRestart, 100);
+
+    return () => clearInterval(interval);
+  }, [validCollections.length]);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const autoScroll = () => {
+      container.scrollLeft += 1; // Slow continuous scroll
+    };
+
+    const interval = setInterval(autoScroll, 50); // 50ms for smooth movement
+
+    return () => clearInterval(interval);
   }, []);
 
   // Calcular cuántos dots (páginas) necesitamos
@@ -194,15 +231,18 @@ export default function CategorySectionSearch({ collections }: CategorySectionSe
               {/* Scroll Container */}
               <div
                 ref={scrollContainerRef}
-                className="scroll-container flex gap-3 sm:gap-4 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory hide-scrollbar"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                className="scroll-container flex gap-3 sm:gap-4 overflow-x-auto overflow-y-hidden scroll-smooth hide-scrollbar"
+                style={{ 
+                  scrollbarWidth: 'none', 
+                  msOverflowStyle: 'none'
+                }}
               >
                 {/* Renderizar las cards dos veces para efecto infinito */}
                 {[...validCollections, ...validCollections].map((category, index) => {
                   return (
                     <div
                       key={`${category.handle}-${index}`}
-                      className="snap-start shrink-0 w-full sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]"
+                      className="snap-start shrink-0 w-full sm:w-[calc(50%-6px)] lg:w-[calc(14.285%-4px)]"
                     >
                       <Link
                         href={category.path}
@@ -214,18 +254,18 @@ export default function CategorySectionSearch({ collections }: CategorySectionSe
                             alt={`Categoría ${category.title} - Explora productos de ${category.title} en Tienda Caoba`}
                             fill
                             className="object-cover object-center group-hover:scale-110 transition-transform duration-700"
-                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 20vw, 14.28vw"
                           />
 
                           {/* Overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 group-active:from-black/75 transition-all duration-300"></div>
 
                           {/* Contenido de texto */}
-                          <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 lg:p-10">
-                            <h3 className="text-2xl sm:text-3xl font-semibold text-white tracking-wider transform group-hover:scale-105 transition-transform duration-300">
+                          <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 lg:p-8">
+                            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-white tracking-wide text-center transform group-hover:scale-105 transition-transform duration-300">
                               {category.title}
                             </h3>
-                            <p className="text-white text-sm sm:text-base mt-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+                            <p className="text-white text-xs sm:text-sm mt-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-1">
                               Explorar productos
                             </p>
                           </div>
