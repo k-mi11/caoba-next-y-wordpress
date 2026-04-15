@@ -100,6 +100,7 @@ export function ProductDescriptionWoo({ product }: ProductDescriptionWooProps) {
   const isVariable = product.__typename === 'VariableProduct';
   const variations = isVariable ? product.variations?.nodes || [] : [];
 
+  
   // Obtener precio y stock actual
   const currentPrice = selectedVariation?.price || product.price || 'Precio no disponible';
   const currentStockStatus = selectedVariation?.stockStatus || product.stockStatus;
@@ -228,6 +229,7 @@ export function ProductDescriptionWoo({ product }: ProductDescriptionWooProps) {
             variations={variations}
             defaultPrice={product.price || 'Precio no disponible'}
             onVariationChange={handleVariationChange}
+            mainAttributes={product.attributes?.nodes || []}
           />
         </div>
       )}
