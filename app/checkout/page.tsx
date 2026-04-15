@@ -47,10 +47,10 @@ export default function CheckoutPage() {
 
     setIsSubmitting(true);
 
-    const phoneNumber = '56928106353';
+    const phoneNumber = '573116464677';
 
     // Construir mensaje simplificado para evitar problemas con WhatsApp
-    let message = '*NUEVO PEDIDO - Pinneacle Perfumeria*%0A%0A';
+    let message = '*NUEVO PEDIDO - Caoba Tienda*%0A%0A';
     message += '*DATOS DEL CLIENTE*%0A';
     message += `Nombre: ${formData.nombre}%0A`;
     message += `Email: ${formData.email}%0A`;

@@ -116,8 +116,8 @@ const loadCart = (): LocalCart | null => {
 // Calcular totales del carrito
 const calculateCartTotals = (items: LocalCartItem[]) => {
   const subtotal = items.reduce((sum, item) => {
-    const priceNum = parsePrice(item.priceDisplay);
-    return sum + (priceNum * item.quantity);
+    const priceNum = parsePrice(item.priceDisplay);  // priceDisplay ya es el total del item
+    return sum + priceNum;  // Solo sumar, no volver a multiplicar
   }, 0);
 
   return {
@@ -153,6 +153,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     productData?: any
   ): Promise<boolean> => {
     try {
+      console.log('=== ADD TO CART DEBUG ===');
+      console.log('Adding product:', productId);
+      console.log('Quantity:', quantity);
+      console.log('ProductData:', productData);
+      
       setIsLoading(true);
 
       // Usar datos proporcionados o obtener de la API
@@ -170,17 +175,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const priceNum = parsePrice(String(product.priceRange?.minVariantPrice?.amount || product.priceRange?.maxVariantPrice?.amount || '0'));
 
       setCart(prevCart => {
+        console.log('Previous cart:', prevCart);
+        
         // Buscar si el producto ya está en el carrito
         const existingItem = prevCart?.contents.nodes.find(
           item => item.productId === productId
         );
+        
+        console.log('Existing item:', existingItem);
 
         if (existingItem) {
+          console.log('Updating existing item...');
+          console.log('Current quantity:', existingItem.quantity);
+          console.log('Adding quantity:', quantity);
+          
           // Actualizar cantidad
           const updatedNodes = prevCart!.contents.nodes.map(item => {
             if (item.productId === productId) {
               const newQuantity = item.quantity + quantity;
-              const newTotal = item.price * newQuantity;
+              const pricePerUnit = item.price; // precio unitario
+              const newTotal = pricePerUnit * newQuantity;
+              console.log('New quantity:', newQuantity);
+              console.log('Price per unit:', pricePerUnit);
+              console.log('New total:', newTotal);
               return {
                 ...item,
                 quantity: newQuantity,
@@ -191,12 +208,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
           });
 
           const totals = calculateCartTotals(updatedNodes);
-          return {
+          const newCart = {
             ...prevCart!,
             contents: { nodes: updatedNodes },
             ...totals
           };
+          console.log('Updated cart (existing):', newCart);
+          return newCart;
         } else {
+          console.log('Adding new item...');
           // Agregar nuevo item
           const priceNum = parsePrice(String(product.priceRange?.minVariantPrice?.amount || product.priceRange?.maxVariantPrice?.amount || '0'));
           const newItem: LocalCartItem = {
@@ -212,14 +232,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
               altText: product.featuredImage.altText
             } : undefined
           };
+          
+          console.log('New item:', newItem);
 
           const updatedNodes = [...(prevCart?.contents.nodes || []), newItem];
           const totals = calculateCartTotals(updatedNodes);
-
-          return {
+          const newCart = {
             contents: { nodes: updatedNodes },
             ...totals
           };
+          console.log('Updated cart (new):', newCart);
+          return newCart;
         }
       });
 
